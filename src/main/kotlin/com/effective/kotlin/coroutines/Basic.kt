@@ -1,13 +1,28 @@
 package com.effective.kotlin.coroutines
 
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-fun main() = runBlocking { // this: CoroutineScope
-    launch { // launch a new coroutine and continue
-        delay(1000L) // non-blocking delay for 1 second (default time unit is ms)
-        println("World!") // print after delay
+fun main() {
+    val animals = listOf("dog", "cat", "lion", "tiger", "elephant")
+    runBlocking {
+        printAllAnimals(animals)
     }
-    println("Hello") // main coroutine continues while a previous one is delayed
 }
+
+private suspend fun printAllAnimals(animals: List<String>) = coroutineScope {
+    animals.forEach { animal ->
+        launch {
+            val delayMillis = (Math.random() * 2000).toLong()
+            printAnimalWithDelay(animal, delayMillis)
+        }
+    }
+}
+
+private suspend fun printAnimalWithDelay(animal: String, delayMillis: Long) {
+    delay(delayMillis)
+    println(animal)
+}
+

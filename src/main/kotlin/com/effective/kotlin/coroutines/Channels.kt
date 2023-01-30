@@ -6,7 +6,6 @@ import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import kotlin.coroutines.suspendCoroutine
 
 @ExperimentalCoroutinesApi
 fun main(): Unit = runBlocking {
