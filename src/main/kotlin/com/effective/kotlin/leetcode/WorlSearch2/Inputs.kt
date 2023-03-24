@@ -1,4 +1,4 @@
-package com.effective.kotlin.leetcode.worldsearch2
+package com.effective.kotlin.leetcode.WorlSearch2
 
 data class InputSet(val board: Array<CharArray>, val words: Array<String>)
 

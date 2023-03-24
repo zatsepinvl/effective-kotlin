@@ -1,6 +1,5 @@
-package com.effective.kotlin.leetcode.worldsearch2
+package com.effective.kotlin.leetcode.WorlSearch2
 
-import java.util.Arrays
 import kotlin.system.measureTimeMillis
 
 fun main() {
