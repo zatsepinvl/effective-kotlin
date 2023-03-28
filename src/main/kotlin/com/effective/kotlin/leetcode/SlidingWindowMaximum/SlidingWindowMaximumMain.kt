@@ -1,14 +1,13 @@
 package com.effective.kotlin.leetcode.SlidingWindowMaximum
 
-import java.awt.SystemColor.window
-import java.util.PriorityQueue
+import java.util.*
 
 fun main() {
     val solution = Solution()
 
     val result = solution.maxSlidingWindow(
-        intArrayOf(1, 3, -1, -3, 5, 3, 6, 7),
-        3
+        intArrayOf(8, 2, 4, 7, 3, 1, 5, 6, 0, 9),
+        2
     )
 
     println(result.contentToString())
@@ -17,16 +16,27 @@ fun main() {
 class Solution {
     fun maxSlidingWindow(nums: IntArray, k: Int): IntArray {
         val result = IntArray(nums.size - k + 1)
-        val queue = PriorityQueue<Int>(k) { a, b -> b - a }
-        nums.take(k).forEach { queue.add(it) }
-        result[0] = queue.peek()
+        val deque: Deque<Int> = LinkedList()
+
+        nums.take(k).forEach { deque.addMax(it) }
+        result[0] = deque.first
 
         for (step in 1..result.lastIndex) {
-            queue.remove(nums[step - 1])
-            queue.add(nums[step + k -1])
-            result[step] = queue.peek()
+            if(deque.first == nums[step - 1]) {
+                deque.removeFirst()
+            }
+            deque.addMax(nums[step + k - 1])
+            result[step] = deque.first
         }
 
         return result
     }
+
+    private fun Deque<Int>.addMax(value: Int) {
+        while (this.isNotEmpty() && value > this.last) {
+            this.removeLast()
+        }
+        this.addLast(value)
+    }
+
 }
