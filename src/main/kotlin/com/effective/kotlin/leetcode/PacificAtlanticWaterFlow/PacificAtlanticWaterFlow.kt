@@ -2,6 +2,18 @@ package com.effective.kotlin.leetcode.PacificAtlanticWaterFlow
 
 fun main() {
     val solution = Solution()
+//
+//    val result = solution.pacificAtlantic(
+//        arrayOf(
+//            intArrayOf(1, 2, 2, 3, 5),
+//            intArrayOf(3, 2, 3, 4, 4),
+//            intArrayOf(2, 4, 5, 3, 1),
+//            intArrayOf(6, 7, 1, 4, 5),
+//            intArrayOf(5, 1, 1, 2, 4)
+//        )
+//    )
+//
+//    println(result)
 
     val result = solution.pacificAtlantic(
         arrayOf(
@@ -20,101 +32,50 @@ fun main() {
 class Solution {
     data class Point(val x: Int, val y: Int)
 
-    private val pMap: MutableMap<Point, Boolean> = mutableMapOf()
-    private val aMap: MutableMap<Point, Boolean> = mutableMapOf()
-
     fun pacificAtlantic(heights: Array<IntArray>): List<List<Int>> {
-        val results: MutableList<List<Int>> = mutableListOf()
+        val pacific: MutableSet<Point> = mutableSetOf()
+        val atlantic: MutableSet<Point> = mutableSetOf()
+
+        val lastX = heights.lastIndex
+        val lastY = heights[0].lastIndex
 
         for (x in heights.indices) {
-            for (y in heights[x].indices) {
-                val point = Point(x, y)
-                if (canFlowToPacific(point, heights, mutableSetOf())
-                    && canFlowToAtlantic(point, heights, mutableSetOf())
-                ) {
-                    results.add(listOf(x, y))
-                }
-            }
+            dfs(Point(x, 0), heights[x][0], heights, pacific)
+            dfs(Point(x, lastY), heights[x][lastY], heights, atlantic)
         }
 
-        return results
+        for (y in heights[0].indices) {
+            dfs(Point(0, y), heights[0][y], heights, pacific)
+            dfs(Point(lastX, y), heights[lastX][y], heights, atlantic)
+        }
+
+        return pacific.asSequence()
+            .filter { atlantic.contains(it) }
+            .map { listOf(it.x, it.y) }
+            .toList()
     }
 
-    private fun canFlowToPacific(point: Point, heights: Array<IntArray>, visited: MutableSet<Point>): Boolean {
+    private fun dfs(point: Point, prevHeight: Int, heights: Array<IntArray>, visited: MutableSet<Point>) {
         val (x, y) = point
 
-        if (pMap.containsKey(point)) {
-            return pMap[point]!!
-        }
-
         if (visited.contains(point)) {
-            return false
+            return
         }
-        visited.add(point)
 
-        if (x == 0 || y == 0) {
-            pMap[point] = true
-            return true
+        if (x < 0 || y < 0 || x > heights.lastIndex || y > heights[0].lastIndex) {
+            return
         }
 
         val height = heights[x][y]
-
-        val canFlowNext = { next: Point ->
-            if (next.x > heights.lastIndex || next.y > heights[0].lastIndex) {
-                false
-            } else if (height >= heights[next.x][next.y]) {
-                canFlowToPacific(next, heights, visited)
-            } else {
-                false
-            }
+        if (height < prevHeight) {
+            return
         }
 
-        val result = canFlowNext(Point(x + 1, y))
-                || canFlowNext(Point(x - 1, y))
-                || canFlowNext(Point(x, y - 1))
-                || canFlowNext(Point(x, y + 1))
-
-        pMap[point] = result
-
-        return result
-    }
-
-    private fun canFlowToAtlantic(point: Point, heights: Array<IntArray>, visited: MutableSet<Point>): Boolean {
-        val (x, y) = point
-
-        if (aMap.containsKey(point)) {
-            return aMap[point]!!
-        }
-
-        if (visited.contains(point)) {
-            return false
-        }
         visited.add(point)
 
-        if (x == heights.lastIndex || y == heights[0].lastIndex) {
-            aMap[point] = true
-            return true
-        }
-
-        val height = heights[x][y]
-
-        val canFlowNext = { next: Point ->
-            if (next.x < 0 || next.y < 0) {
-                false
-            } else if (height >= heights[next.x][next.y]) {
-                canFlowToAtlantic(next, heights, visited)
-            } else {
-                false
-            }
-        }
-
-        val result = canFlowNext(Point(x + 1, y))
-                || canFlowNext(Point(x - 1, y))
-                || canFlowNext(Point(x, y - 1))
-                || canFlowNext(Point(x, y + 1))
-
-        aMap[point] = result
-
-        return result
+        dfs(Point(x + 1, y), height, heights, visited)
+        dfs(Point(x - 1, y), height, heights, visited)
+        dfs(Point(x, y - 1), height, heights, visited)
+        dfs(Point(x, y + 1), height, heights, visited)
     }
 }
