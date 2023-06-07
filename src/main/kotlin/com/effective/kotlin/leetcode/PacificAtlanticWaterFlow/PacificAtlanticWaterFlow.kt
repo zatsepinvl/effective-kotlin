@@ -1,7 +1,9 @@
 package com.effective.kotlin.leetcode.PacificAtlanticWaterFlow
 
+
 fun main() {
     val solution = Solution()
+    solution.javaClass.classLoader
 //
 //    val result = solution.pacificAtlantic(
 //        arrayOf(
