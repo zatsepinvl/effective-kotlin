@@ -1,4 +1,4 @@
-package com.effective.kotlin.leetcode.SkipList
+package com.effective.kotlin.leetcode
 
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue

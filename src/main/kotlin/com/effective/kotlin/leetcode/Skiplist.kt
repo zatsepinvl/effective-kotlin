@@ -1,4 +1,4 @@
-package com.effective.kotlin.leetcode.SkipList
+package com.effective.kotlin.leetcode
 
 import kotlin.math.ln
 import kotlin.random.Random
