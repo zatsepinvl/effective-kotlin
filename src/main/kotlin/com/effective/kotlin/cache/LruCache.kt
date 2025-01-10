@@ -1,14 +1,11 @@
 package com.effective.kotlin.cache
 
 import java.time.Clock
-import java.util.LinkedHashMap
-import java.util.LinkedList
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.locks.ReentrantLock
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import javax.annotation.concurrent.ThreadSafe
 import kotlin.concurrent.read
-import kotlin.concurrent.withLock
 import kotlin.concurrent.write
 
 fun main() {
